@@ -38,6 +38,10 @@ button{background:var(--green);color:white;border:0;border-radius:8px;padding:11
 </div>
 <div id="mainImagePreview" class="thumbs"></div>
 <label>구매 링크<input name="url" type="url" placeholder="https://..."></label>
+<label>관리자 비밀번호
+  <input type="password" id="adminPassword" required
+         placeholder="관리자 비밀번호 입력">
+</label>  
 <label>판매 상태<select name="status"><option value="판매중">판매중</option><option value="판매예정">판매예정</option><option value="판매종료">판매종료</option></select></label>
 </form>
 </section>
@@ -52,8 +56,16 @@ button{background:var(--green);color:white;border:0;border-radius:8px;padding:11
 </section>
 <section class="panel">
 <h2>🔗 상품 페이지 주소 예시</h2><p class="hint">주소 예시만 표시합니다. 실제 페이지가 생성되거나 공개된 것은 아닙니다.</p><div id="urlPreview" class="empty">상품명을 입력하면 주소 예시가 표시됩니다.</div>
-<div class="row" style="margin-top:12px"><button type="button" id="updatePreview">미리보기 업데이트</button><button type="button" id="exportCsv" class="secondary">상품 정보 CSV 다운로드</button><button type="button" id="reset" class="secondary">전체 초기화</button></div><p id="status" class="status"></p>
+
+<div class="row" style="margin-top:12px">
+  <button type="button" id="updatePreview">미리보기 업데이트</button>
+  <button type="button" id="saveProduct">상품 저장</button>
+  <button type="button" id="exportCsv" class="secondary">상품 정보 CSV 다운로드</button>
+  <button type="button" id="reset" class="secondary">전체 초기화</button>
+</div>
+<p id="status" class="status"></p>
 </section>
+
 <p><a href="./index.html">← 고객용 홈페이지로 돌아가기</a></p>
 </main>
 <script>
