@@ -1,167 +1,98 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>감자별 공구마켓 관리자</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f7f6f0;
-      color: #30352e;
-    }
-    header {
-      background: #fff;
-      padding: 20px;
-      border-bottom: 1px solid #e8e5d9;
-    }
-    .wrap { max-width: 1000px; margin: auto; }
-    h1 { margin: 0; font-size: 24px; }
-    header p { margin-bottom: 0; color: #777; }
-    main { max-width: 1000px; margin: 28px auto; padding: 0 16px; }
-    .panel {
-      background: white;
-      padding: 24px;
-      margin-bottom: 22px;
-      border-radius: 16px;
-      border: 1px solid #e8e5d9;
-    }
-    h2 { margin-top: 0; font-size: 19px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-    label { display: block; font-size: 14px; font-weight: bold; }
-    input, textarea, select {
-      width: 100%;
-      margin-top: 7px;
-      margin-bottom: 16px;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 9px;
-      font: inherit;
-      background: white;
-    }
-    textarea { min-height: 90px; resize: vertical; }
-    button {
-      background: #637b55;
-      color: white;
-      border: 0;
-      border-radius: 9px;
-      padding: 12px 18px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .secondary { background: #e9eee4; color: #3e5434; }
-    .hint { color: #777; font-size: 13px; line-height: 1.6; }
-    .empty {
-      padding: 22px;
-      text-align: center;
-      background: #fafaf7;
-      border-radius: 10px;
-      color: #777;
-    }
-    @media (max-width: 600px) {
-      .grid { grid-template-columns: 1fr; }
-      .panel { padding: 18px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>감자별 공구마켓 관리자</title>
+<style>
+:root{--green:#637b55;--dark:#3e5434;--bg:#f7f6f0;--border:#e8e5d9;--text:#30352e}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+header{background:#fff;padding:20px;border-bottom:1px solid var(--border)}.wrap,main{max-width:1100px;margin:auto}h1{margin:0;font-size:24px}header p{margin:6px 0 0;color:#777}main{padding:24px 16px}
+.panel{background:#fff;padding:22px;margin-bottom:20px;border:1px solid var(--border);border-radius:15px}h2{margin:0 0 14px;font-size:19px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}label{display:block;font-size:14px;font-weight:bold;margin-bottom:12px}
+input,textarea,select{display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #ddd;border-radius:8px;font:inherit;background:white;color:var(--text)}textarea{min-height:90px;resize:vertical}
+button{background:var(--green);color:white;border:0;border-radius:8px;padding:11px 15px;cursor:pointer;font-size:14px}.secondary{background:#e9eee4;color:var(--dark)}.danger{background:#a7473e}
+.hint{color:#777;font-size:13px;line-height:1.6}.notice{padding:12px;background:#fff8df;border:1px solid #ead99b;border-radius:9px;font-size:13px;margin-bottom:18px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.status{font-size:14px;min-height:20px}.error{color:#a12b24}.success{color:#2f6b38}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px;margin:10px 0}.thumb{border:1px solid var(--border);padding:7px;border-radius:9px;overflow:hidden}.thumb img{width:100%;height:120px;object-fit:contain;background:#fafaf7}.thumb p{font-size:12px;overflow-wrap:anywhere}
+.block{border:1px solid var(--border);border-radius:10px;padding:14px;margin:12px 0}.block img{max-width:220px;width:100%;border-radius:8px}.preview{max-width:760px;margin:auto;border:1px solid var(--border);border-radius:10px;overflow:hidden}.preview h1{font-size:26px;padding:20px 18px 0}.meta{padding:0 18px 14px;color:#777}.price{padding:0 18px 14px;color:var(--dark);font-size:23px;font-weight:bold}.preview-content{padding:0 18px 20px}.preview-content img{display:block;width:100%;height:auto;margin:12px 0;border-radius:8px}.preview-content p{white-space:pre-wrap;overflow-wrap:anywhere}.empty{background:#fafaf7;color:#777;text-align:center;padding:20px;border-radius:9px}
+@media(max-width:600px){.grid{grid-template-columns:1fr;gap:0}.panel{padding:16px}h1{font-size:21px}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <h1>🥔⭐ 감자별 공구마켓 관리자</h1>
-      <p>공동구매 상품과 상세페이지를 관리하는 공간</p>
-    </div>
-  </header>
-
-  <main>
-    <section class="panel">
-      <h2>📦 상품 등록</h2>
-      <p class="hint">아래 양식은 화면 구성용입니다. 아직 저장 기능은 연결되지 않았습니다.</p>
-
-      <form id="productForm">
-        <label>상품명
-          <input name="name" required placeholder="예: 국내산 꿀고구마">
-        </label>
-
-        <div class="grid">
-          <label>정상가 (원)
-            <input name="originalPrice" type="number" min="0" placeholder="20000">
-          </label>
-          <label>공동구매가 (원)
-            <input name="price" type="number" min="0" required placeholder="14900">
-          </label>
-        </div>
-
-        <label>상품 설명
-          <textarea name="description" placeholder="상품의 특징을 입력해 주세요."></textarea>
-        </label>
-
-        <label>대표 이미지 URL
-          <input name="image" type="url" placeholder="https://...">
-        </label>
-
-        <label>구매 링크
-          <input name="url" type="url" placeholder="https://...">
-        </label>
-
-        <label>판매 상태
-          <select name="status">
-            <option value="판매중">판매중</option>
-            <option value="판매예정">판매예정</option>
-            <option value="판매종료">판매종료</option>
-          </select>
-        </label>
-
-        <button type="submit">등록 미리보기</button>
-        <button type="reset" class="secondary">양식 초기화</button>
-      </form>
-    </section>
-
-    <section class="panel">
-      <h2>🛍️ 상품 목록</h2>
-      <div id="productList" class="empty">아직 등록 미리보기가 없습니다.</div>
-    </section>
-
-    <section class="panel">
-      <h2>🖼️ 상세페이지 관리</h2>
-      <p>다음 단계에서 상품별 상세 이미지, 설명 블록, 순서 변경 및 미리보기를 연결할 예정입니다.</p>
-      <p class="hint">실제 상품 저장과 관리자 인증은 아직 설정되지 않았습니다.</p>
-    </section>
-
-    <p><a href="./index.html">← 고객용 홈페이지로 돌아가기</a></p>
-  </main>
-
-  <script>
-    const form = document.getElementById("productForm");
-    const list = document.getElementById("productList");
-
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
-      const data = new FormData(form);
-      const name = data.get("name");
-      const price = Number(data.get("price") || 0);
-      const status = data.get("status");
-
-      const card = document.createElement("div");
-      card.style.cssText =
-        "padding:16px;border:1px solid #e8e5d9;border-radius:10px;margin-bottom:10px";
-
-      const title = document.createElement("strong");
-      title.textContent = name;
-
-      const detail = document.createElement("p");
-      detail.textContent =
-        price.toLocaleString("ko-KR") + "원 · " + status;
-
-      card.append(title, detail);
-      list.replaceChildren(card);
-    });
-  </script>
+<header><div class="wrap"><h1>🥔⭐ 감자별 공구마켓 관리자</h1><p>상품 정보와 상품별 상세페이지를 구성하는 공간</p></div></header>
+<main>
+<div class="notice"><strong>현재 버전 안내</strong><br>이 파일은 상품 입력, 이미지 선택, 상세 콘텐츠 구성 및 브라우저 미리보기를 제공합니다. Google Drive 업로드, 스프레드시트 저장, 실제 상품 URL 발행은 아직 연결되지 않았습니다. 미리보기는 현재 브라우저에서만 작동합니다.</div>
+<section class="panel">
+<h2>📦 상품 기본 정보</h2>
+<form id="productForm">
+<label>상품명<input name="name" required placeholder="예: 국내산 꿀고구마"></label>
+<div class="grid">
+<label>정상가 (원)<input name="originalPrice" type="number" min="0" placeholder="20000"></label>
+<label>공동구매가 (원)<input name="price" type="number" min="0" required placeholder="14900"></label>
+</div>
+<label>상품 요약 설명<textarea name="description" placeholder="상품의 핵심 특징을 간단히 입력해 주세요."></textarea></label>
+<div class="grid">
+<label>대표 이미지 파일<input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp"></label>
+<label>또는 기존 이미지 URL<input name="image" type="url" placeholder="https://..."></label>
+</div>
+<div id="mainImagePreview" class="thumbs"></div>
+<label>구매 링크<input name="url" type="url" placeholder="https://..."></label>
+<label>판매 상태<select name="status"><option value="판매중">판매중</option><option value="판매예정">판매예정</option><option value="판매종료">판매종료</option></select></label>
+</form>
+</section>
+<section class="panel">
+<h2>🖼️ 상세페이지 구성</h2>
+<p class="hint">이미지와 텍스트 블록을 추가하고 순서를 변경할 수 있습니다. 이 단계에서는 이미지가 Drive에 업로드되지 않습니다.</p>
+<div class="row"><button type="button" id="addImage">+ 이미지 블록</button><button type="button" id="addText" class="secondary">+ 텍스트 블록</button><button type="button" id="addHeading" class="secondary">+ 제목 블록</button></div>
+<div id="blocks"></div><p id="blockStatus" class="status"></p>
+</section>
+<section class="panel">
+<h2>👀 상세페이지 미리보기</h2><div id="pagePreview" class="empty">상품명을 입력하고 이미지 또는 텍스트 블록을 추가하면 미리보기가 표시됩니다.</div>
+</section>
+<section class="panel">
+<h2>🔗 상품 페이지 주소 예시</h2><p class="hint">주소 예시만 표시합니다. 실제 페이지가 생성되거나 공개된 것은 아닙니다.</p><div id="urlPreview" class="empty">상품명을 입력하면 주소 예시가 표시됩니다.</div>
+<div class="row" style="margin-top:12px"><button type="button" id="updatePreview">미리보기 업데이트</button><button type="button" id="reset" class="secondary">전체 초기화</button></div><p id="status" class="status"></p>
+</section>
+<p><a href="./index.html">← 고객용 홈페이지로 돌아가기</a></p>
+</main>
+<script>
+const form=document.getElementById('productForm');
+const mainFile=document.getElementById('imageFile');
+const mainPreview=document.getElementById('mainImagePreview');
+const blocksEl=document.getElementById('blocks');
+const pagePreview=document.getElementById('pagePreview');
+const urlPreview=document.getElementById('urlPreview');
+const statusEl=document.getElementById('status');
+let blocks=[],nextId=1;
+function data(){const f=new FormData(form);return{name:(f.get('name')||'').trim(),original:Number(f.get('originalPrice')||0),price:Number(f.get('price')||0),description:(f.get('description')||'').trim(),image:(f.get('image')||'').trim(),url:(f.get('url')||'').trim(),status:f.get('status')||'판매중'}}
+function thumb(src,label,parent){const box=document.createElement('div');box.className='thumb';const img=document.createElement('img');img.src=src;img.alt=label;const p=document.createElement('p');p.textContent=label;box.append(img,p);parent.append(box)}
+function revoke(url){if(url&&url.startsWith('blob:'))URL.revokeObjectURL(url)}
+mainFile.addEventListener('change',()=>{mainPreview.replaceChildren();if(mainFile.files[0])thumb(URL.createObjectURL(mainFile.files[0]),mainFile.files[0].name,mainPreview);update()});
+form.elements.image.addEventListener('input',()=>{if(!mainFile.files.length){mainPreview.replaceChildren();if(data().image)thumb(data().image,'대표 이미지 URL',mainPreview)}update()});
+function addBlock(type){blocks.push({id:nextId++,type,title:'',text:'',file:null,objectUrl:'',url:''});renderBlocks();update()}
+function move(i,d){const j=i+d;if(j<0||j>=blocks.length)return;[blocks[i],blocks[j]]=[blocks[j],blocks[i]];renderBlocks();update()}
+function renderBlocks(){blocksEl.replaceChildren();if(!blocks.length){const e=document.createElement('div');e.className='empty';e.textContent='아직 블록이 없습니다. 위 버튼으로 추가해 주세요.';blocksEl.append(e);return}
+blocks.forEach((b,i)=>{const box=document.createElement('div');box.className='block';const h=document.createElement('h3');h.textContent=(i+1)+'. '+({image:'이미지 블록',text:'텍스트 블록',heading:'제목 블록'}[b.type]);box.append(h);
+if(b.type==='image'){const label=document.createElement('label');label.textContent='이미지 파일 선택';const input=document.createElement('input');input.type='file';input.accept='image/jpeg,image/png,image/webp';input.addEventListener('change',()=>{const f=input.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('이미지 파일을 선택해 주세요.');return}revoke(b.objectUrl);b.file=f;b.objectUrl=URL.createObjectURL(f);b.url='';renderBlocks();update()});label.append(input);box.append(label);
+const ul=document.createElement('label');ul.textContent='또는 이미지 URL';const ui=document.createElement('input');ui.type='url';ui.placeholder='https://...';ui.value=b.url;ui.addEventListener('input',()=>{b.url=ui.value;b.file=null;revoke(b.objectUrl);b.objectUrl='';update()});ul.append(ui);box.append(ul);const src=b.objectUrl||b.url;if(src){const img=document.createElement('img');img.src=src;img.alt='상세 이미지';box.append(img)}
+}else{if(b.type==='heading'){const l=document.createElement('label');l.textContent='제목';const inp=document.createElement('input');inp.value=b.title;inp.placeholder='예: 상품의 특별한 장점';inp.addEventListener('input',()=>{b.title=inp.value;update()});l.append(inp);box.append(l)}
+const l=document.createElement('label');l.textContent=b.type==='heading'?'보충 설명 (선택)':'본문';const ta=document.createElement('textarea');ta.value=b.text;ta.placeholder='상세 설명을 입력해 주세요.';ta.addEventListener('input',()=>{b.text=ta.value;update()});l.append(ta);box.append(l)}
+const actions=document.createElement('div');actions.className='row';actions.style.marginTop='10px';[['↑ 위로',()=>move(i,-1),i===0],['↓ 아래로',()=>move(i,1),i===blocks.length-1],['블록 삭제',()=>{const [x]=blocks.splice(i,1);revoke(x.objectUrl);renderBlocks();update()},false]].forEach(([txt,fn,disabled],k)=>{const btn=document.createElement('button');btn.type='button';btn.textContent=txt;btn.disabled=disabled;if(k<2)btn.className='secondary';else btn.className='danger';btn.addEventListener('click',fn);actions.append(btn)});box.append(actions);blocksEl.append(box)})}
+function update(){const d=data();pagePreview.replaceChildren();if(!d.name&&!d.description&&!d.image&&!mainFile.files.length&&!blocks.length){pagePreview.className='empty';pagePreview.textContent='상품명을 입력하고 이미지 또는 텍스트 블록을 추가하면 미리보기가 표시됩니다.';urlPreview.className='empty';urlPreview.textContent='상품명을 입력하면 주소 예시가 표시됩니다.';return}
+pagePreview.className='preview';const h=document.createElement('h1');h.textContent=d.name||'상품명을 입력해 주세요';pagePreview.append(h);const meta=document.createElement('div');meta.className='meta';meta.textContent=d.description||d.status;pagePreview.append(meta);const price=document.createElement('div');price.className='price';price.textContent=d.price?d.price.toLocaleString('ko-KR')+'원':'공동구매가';pagePreview.append(price);const content=document.createElement('div');content.className='preview-content';
+const src=mainFile.files[0]?URL.createObjectURL(mainFile.files[0]):d.image;if(src){const img=document.createElement('img');img.src=src;img.alt=d.name||'대표 이미지';content.append(img)}
+if(d.description){const p=document.createElement('p');p.textContent=d.description;content.append(p)}
+blocks.forEach(b=>{if(b.type==='image'){const s=b.objectUrl||b.url;if(s){const img=document.createElement('img');img.src=s;img.alt='상세 이미지';content.append(img)}}else{if(b.type==='heading'&&b.title){const h=document.createElement('h2');h.textContent=b.title;content.append(h)}if(b.text){const p=document.createElement('p');p.textContent=b.text;content.append(p)}}});pagePreview.append(content);
+const slug=encodeURIComponent((d.name||'상품명').replace(/\s+/g,'-'));urlPreview.className='empty';urlPreview.textContent=location.origin+location.pathname.replace(/admin\.html$/,'product.html')+'?name='+slug}
+document.getElementById('addImage').addEventListener('click',()=>addBlock('image'));
+document.getElementById('addText').addEventListener('click',()=>addBlock('text'));
+document.getElementById('addHeading').addEventListener('click',()=>addBlock('heading'));
+document.getElementById('updatePreview').addEventListener('click',()=>{update();statusEl.className='status success';statusEl.textContent='미리보기를 업데이트했습니다. 아직 저장 또는 공개 발행된 것은 아닙니다.'});
+document.getElementById('reset').addEventListener('click',()=>{if(!confirm('입력한 내용을 모두 초기화할까요?'))return;blocks.forEach(b=>revoke(b.objectUrl));blocks=[];form.reset();mainPreview.replaceChildren();renderBlocks();update();statusEl.textContent=''});
+form.addEventListener('input',update);form.addEventListener('change',update);
+form.addEventListener('submit',e=>{e.preventDefault();statusEl.className='status error';statusEl.textContent='현재 버전은 미리보기만 지원합니다. Drive 업로드 및 스프레드시트 저장 연결 후 실제 등록할 수 있습니다.';update()});
+renderBlocks();update();
+</script>
 </body>
 </html>
