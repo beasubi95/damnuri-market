@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="감자별 공구마켓 공동구매 상품 상세페이지">
+  <title>상품 상세페이지 | 감자별 공구마켓</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f7f6f0;
+      color: #30352e;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      line-height: 1.7;
+    }
+
+    header {
+      padding: 20px 16px;
+      background: #fff;
+      border-bottom: 1px solid #e8e5d9;
+      text-align: center;
+    }
+
+    header a {
+      color: #3e5434;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 24px auto;
+      padding: 0 14px;
+    }
+
+    .product {
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #e8e5d9;
+      border-radius: 16px;
+    }
+
+    .hero-image {
+      display: none;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .info {
+      padding: 24px;
+    }
+
+    .label {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #e9eee4;
+      color: #3e5434;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: 28px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .description {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      color: #666;
+    }
+
+    .original-price {
+      margin-top: 22px;
+      color: #888;
+      text-decoration: line-through;
+    }
+
+    .price {
+      margin: 0;
+      color: #3e5434;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    .buy-button {
+      display: block;
+      margin-top: 22px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #637b55;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .details {
+      margin-top: 18px;
+      padding: 24px;
+      background: #fff;
+      border: 1px solid #e8e5d9;
+      border-radius: 16px;
+    }
+
+    .details h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .details p {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 16px 0;
+      border-radius: 8px;
+    }
+
+    .notice {
+      padding: 16px;
+      border-radius: 10px;
+      background: #fff8df;
+      color: #6e6037;
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 28px 12px;
+      color: #888;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 23px;
+      }
+
+      .info,
+      .details {
+        padding: 18px;
+      }
+
+      .price {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="./index.html">🥔⭐ 감자별 공구마켓</a>
+  </header>
+
+  <main>
+    <article class="product">
+      <img id="heroImage" class="hero-image" alt="상품 대표 이미지">
+
+      <div class="info">
+        <span class="label">공동구매 상품</span>
+
+        <h1 id="productName">상품 정보를 불러오는 중...</h1>
+
+        <div id="description" class="description"></div>
+
+        <div id="originalPrice" class="original-price"></div>
+        <p id="price" class="price"></p>
+
+        <a id="buyButton" class="buy-button" href="#" hidden>
+          구매하러 가기
+        </a>
+      </div>
+    </article>
+
+    <section class="details">
+      <h2>상품 상세정보</h2>
+      <div id="detailContent"></div>
+
+      <div id="missingNotice" class="notice" hidden>
+        현재는 URL로 전달된 상품 정보만 표시하고 있어요.
+        구글 시트에 저장된 상품을 자동으로 불러오는 기능은
+        아직 연결되지 않았습니다.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    감자별 공구마켓 · 상품 정보는 판매처 안내를 확인해 주세요.
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+
+    const name = params.get("name") || "";
+    const description = params.get("description") || "";
+    const image = params.get("image") || "";
+    const purchaseUrl = params.get("url") || "";
+    const priceValue = params.get("price") || "";
+    const originalValue = params.get("originalPrice") || "";
+
+    function formatPrice(value) {
+      if (value === "" || !Number.isFinite(Number(value))) {
+        return "";
+      }
+
+      return Number(value).toLocaleString("ko-KR") + "원";
+    }
+
+    document.getElementById("productName").textContent =
+      name || "상품 정보가 없습니다.";
+
+    document.getElementById("description").textContent =
+      description;
+
+    document.getElementById("price").textContent =
+      formatPrice(priceValue);
+
+    document.getElementById("originalPrice").textContent =
+      formatPrice(originalValue);
+
+    const heroImage = document.getElementById("heroImage");
+
+    if (image) {
+      try {
+        const parsedImage = new URL(image);
+
+        if (parsedImage.protocol === "https:" ||
+            parsedImage.protocol === "http:") {
+          heroImage.src = parsedImage.href;
+          heroImage.style.display = "block";
+
+          heroImage.addEventListener("error", () => {
+            heroImage.style.display = "none";
+          });
+        }
+      } catch (error) {
+        // 올바르지 않은 이미지 주소는 표시하지 않습니다.
+      }
+    }
+
+    const buyButton = document.getElementById("buyButton");
+
+    if (purchaseUrl) {
+      try {
+        const parsedUrl = new URL(purchaseUrl);
+
+        if (parsedUrl.protocol === "https:" ||
+            parsedUrl.protocol === "http:") {
+          buyButton.href = parsedUrl.href;
+          buyButton.hidden = false;
+          buyButton.target = "_blank";
+          buyButton.rel = "noopener noreferrer";
+        }
+      } catch (error) {
+        // 올바르지 않은 구매 주소는 표시하지 않습니다.
+      }
+    }
+
+    const detailContent = document.getElementById("detailContent");
+
+    if (description) {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = description;
+      detailContent.appendChild(paragraph);
+    }
+
+    if (!name) {
+      document.getElementById("missingNotice").hidden = false;
+    } else if (!description && !image && !priceValue) {
+      document.getElementById("missingNotice").hidden = false;
+    }
+  </script>
+</body>
+</html>
