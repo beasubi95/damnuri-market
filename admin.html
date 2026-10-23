@@ -123,6 +123,11 @@ document.getElementById('reset').addEventListener('click',()=>{if(!confirm('입�
 form.addEventListener('input',update);form.addEventListener('change',update);
 form.addEventListener('submit',e=>{e.preventDefault();statusEl.className='status error';statusEl.textContent='현재 버전은 미리보기만 지원합니다. Drive 업로드 및 스프레드시트 저장 연결 후 실제 등록할 수 있습니다.';update()});
 renderBlocks();update();
+  document.getElementById('saveProduct').addEventListener('click', () => {
+  statusEl.className = 'status error';
+  statusEl.textContent =
+    '저장 기능 연결 준비 중입니다. Apps Script 주소와 관리자 인증을 연결해야 합니다.';
+});
 </script>
 </body>
 </html>
