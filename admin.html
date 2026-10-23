@@ -77,6 +77,19 @@ const pagePreview=document.getElementById('pagePreview');
 const urlPreview=document.getElementById('urlPreview');
 const statusEl=document.getElementById('status');
 let blocks=[],nextId=1;
+  
+const passwordInput = document.getElementById('adminPassword');
+const loginStatus = document.createElement('p');
+loginStatus.className = 'hint';
+loginStatus.textContent = '저장에 성공하면 이 탭을 닫기 전까지 로그인 상태를 유지합니다.';
+passwordInput.parentElement.appendChild(loginStatus);
+
+const savedSessionPassword = sessionStorage.getItem('damnuriAdminPassword');
+if (savedSessionPassword) {
+  passwordInput.value = savedSessionPassword;
+  loginStatus.textContent = '로그인 유지 중';
+}
+
 function data(){const f=new FormData(form);return{name:(f.get('name')||'').trim(),original:Number(f.get('originalPrice')||0),price:Number(f.get('price')||0),description:(f.get('description')||'').trim(),image:(f.get('image')||'').trim(),url:(f.get('url')||'').trim(),status:f.get('status')||'판매중'}}
 function thumb(src,label,parent){const box=document.createElement('div');box.className='thumb';const img=document.createElement('img');img.src=src;img.alt=label;const p=document.createElement('p');p.textContent=label;box.append(img,p);parent.append(box)}
 function revoke(url){if(url&&url.startsWith('blob:'))URL.revokeObjectURL(url)}
@@ -182,6 +195,8 @@ document.getElementById('saveProduct').addEventListener('click', async () => {
 
     statusEl.className = 'status success';
     statusEl.textContent = result.message || '상품이 저장되었습니다.';
+    sessionStorage.setItem('damnuriAdminPassword', password);
+loginStatus.textContent = '로그인 유지 중';
   } catch (error) {
     statusEl.className = 'status error';
     statusEl.textContent = '저장 실패: ' + error.message;
