@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>감자별 공구마켓 관리자</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f6f0;
+      color: #30352e;
+    }
+    header {
+      background: #fff;
+      padding: 20px;
+      border-bottom: 1px solid #e8e5d9;
+    }
+    .wrap { max-width: 1000px; margin: auto; }
+    h1 { margin: 0; font-size: 24px; }
+    header p { margin-bottom: 0; color: #777; }
+    main { max-width: 1000px; margin: 28px auto; padding: 0 16px; }
+    .panel {
+      background: white;
+      padding: 24px;
+      margin-bottom: 22px;
+      border-radius: 16px;
+      border: 1px solid #e8e5d9;
+    }
+    h2 { margin-top: 0; font-size: 19px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    label { display: block; font-size: 14px; font-weight: bold; }
+    input, textarea, select {
+      width: 100%;
+      margin-top: 7px;
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      font: inherit;
+      background: white;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    button {
+      background: #637b55;
+      color: white;
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 18px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .secondary { background: #e9eee4; color: #3e5434; }
+    .hint { color: #777; font-size: 13px; line-height: 1.6; }
+    .empty {
+      padding: 22px;
+      text-align: center;
+      background: #fafaf7;
+      border-radius: 10px;
+      color: #777;
+    }
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      .panel { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>🥔⭐ 감자별 공구마켓 관리자</h1>
+      <p>공동구매 상품과 상세페이지를 관리하는 공간</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>📦 상품 등록</h2>
+      <p class="hint">아래 양식은 화면 구성용입니다. 아직 저장 기능은 연결되지 않았습니다.</p>
+
+      <form id="productForm">
+        <label>상품명
+          <input name="name" required placeholder="예: 국내산 꿀고구마">
+        </label>
+
+        <div class="grid">
+          <label>정상가 (원)
+            <input name="originalPrice" type="number" min="0" placeholder="20000">
+          </label>
+          <label>공동구매가 (원)
+            <input name="price" type="number" min="0" required placeholder="14900">
+          </label>
+        </div>
+
+        <label>상품 설명
+          <textarea name="description" placeholder="상품의 특징을 입력해 주세요."></textarea>
+        </label>
+
+        <label>대표 이미지 URL
+          <input name="image" type="url" placeholder="https://...">
+        </label>
+
+        <label>구매 링크
+          <input name="url" type="url" placeholder="https://...">
+        </label>
+
+        <label>판매 상태
+          <select name="status">
+            <option value="판매중">판매중</option>
+            <option value="판매예정">판매예정</option>
+            <option value="판매종료">판매종료</option>
+          </select>
+        </label>
+
+        <button type="submit">등록 미리보기</button>
+        <button type="reset" class="secondary">양식 초기화</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>🛍️ 상품 목록</h2>
+      <div id="productList" class="empty">아직 등록 미리보기가 없습니다.</div>
+    </section>
+
+    <section class="panel">
+      <h2>🖼️ 상세페이지 관리</h2>
+      <p>다음 단계에서 상품별 상세 이미지, 설명 블록, 순서 변경 및 미리보기를 연결할 예정입니다.</p>
+      <p class="hint">실제 상품 저장과 관리자 인증은 아직 설정되지 않았습니다.</p>
+    </section>
+
+    <p><a href="./index.html">← 고객용 홈페이지로 돌아가기</a></p>
+  </main>
+
+  <script>
+    const form = document.getElementById("productForm");
+    const list = document.getElementById("productList");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const data = new FormData(form);
+      const name = data.get("name");
+      const price = Number(data.get("price") || 0);
+      const status = data.get("status");
+
+      const card = document.createElement("div");
+      card.style.cssText =
+        "padding:16px;border:1px solid #e8e5d9;border-radius:10px;margin-bottom:10px";
+
+      const title = document.createElement("strong");
+      title.textContent = name;
+
+      const detail = document.createElement("p");
+      detail.textContent =
+        price.toLocaleString("ko-KR") + "원 · " + status;
+
+      card.append(title, detail);
+      list.replaceChildren(card);
+    });
+  </script>
+</body>
+</html>
