@@ -52,7 +52,7 @@ button{background:var(--green);color:white;border:0;border-radius:8px;padding:11
 </section>
 <section class="panel">
 <h2>🔗 상품 페이지 주소 예시</h2><p class="hint">주소 예시만 표시합니다. 실제 페이지가 생성되거나 공개된 것은 아닙니다.</p><div id="urlPreview" class="empty">상품명을 입력하면 주소 예시가 표시됩니다.</div>
-<div class="row" style="margin-top:12px"><button type="button" id="updatePreview">미리보기 업데이트</button><button type="button" id="reset" class="secondary">전체 초기화</button></div><p id="status" class="status"></p>
+<div class="row" style="margin-top:12px"><button type="button" id="updatePreview">미리보기 업데이트</button><button type="button" id="exportCsv" class="secondary">상품 정보 CSV 다운로드</button><button type="button" id="reset" class="secondary">전체 초기화</button></div><p id="status" class="status"></p>
 </section>
 <p><a href="./index.html">← 고객용 홈페이지로 돌아가기</a></p>
 </main>
@@ -89,6 +89,24 @@ document.getElementById('addImage').addEventListener('click',()=>addBlock('image
 document.getElementById('addText').addEventListener('click',()=>addBlock('text'));
 document.getElementById('addHeading').addEventListener('click',()=>addBlock('heading'));
 document.getElementById('updatePreview').addEventListener('click',()=>{update();statusEl.className='status success';statusEl.textContent='미리보기를 업데이트했습니다. 아직 저장 또는 공개 발행된 것은 아닙니다.'});
+document.getElementById('exportCsv').addEventListener('click',()=>{
+  const d=data();
+  if(!d.name){statusEl.className='status error';statusEl.textContent='상품명을 먼저 입력해 주세요.';return;}
+  if(!d.price || d.price<0){statusEl.className='status error';statusEl.textContent='공동구매가를 입력해 주세요.';return;}
+  if(mainFile.files.length || blocks.some(b=>b.file)){
+    statusEl.className='status error';
+    statusEl.textContent='선택한 이미지 파일은 아직 Drive에 업로드되지 않았어요. 이미지를 Drive에 직접 올리고 공유 가능한 이미지 URL을 입력한 뒤 CSV를 다운로드해 주세요.';
+    return;
+  }
+  const productId='P'+Date.now().toString().slice(-8);
+  const headers=['상품ID','상품명','상품설명','정상가','공동구매가','이미지URL','구매URL','판매상태'];
+  const row=[productId,d.name,d.description,d.original,d.price,d.image,d.url,d.status];
+  const csvCell=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const csv='\uFEFF'+headers.map(csvCell).join(',')+'\r\n'+row.map(csvCell).join(',')+'\r\n';
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=productId+'-상품정보.csv';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+  statusEl.className='status success';statusEl.textContent='CSV 파일을 다운로드했어요. 이 파일은 구글 시트에 가져올 수 있지만, 아직 자동 저장이나 상품 페이지 발행은 되지 않습니다.';
+});
 document.getElementById('reset').addEventListener('click',()=>{if(!confirm('입력한 내용을 모두 초기화할까요?'))return;blocks.forEach(b=>revoke(b.objectUrl));blocks=[];form.reset();mainPreview.replaceChildren();renderBlocks();update();statusEl.textContent=''});
 form.addEventListener('input',update);form.addEventListener('change',update);
 form.addEventListener('submit',e=>{e.preventDefault();statusEl.className='status error';statusEl.textContent='현재 버전은 미리보기만 지원합니다. Drive 업로드 및 스프레드시트 저장 연결 후 실제 등록할 수 있습니다.';update()});
